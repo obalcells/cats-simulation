@@ -1,0 +1,9 @@
+launch_rail_angle = 0;                         % Launch rail Angle [°]
+eul = [(launch_rail_angle-90)/180*pi 3/180*pi 0];
+quat = eul2quat(eul, 'XYZ');
+vec1 = [0; 1; 0; 0];
+vec2 = [0; 0; 1; 0];
+vec3 = [0; 0; 0; 1];
+rotvec1 = quat_mult(quat_mult(conjugate_q(quat'), vec1), quat');
+rotvec2 = quat_mult(quat_mult(conjugate_q(quat'), vec2), quat');
+rotvec3 = quat_mult(quat_mult(conjugate_q(quat'), vec3), quat');
