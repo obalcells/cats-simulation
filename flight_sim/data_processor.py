@@ -1,10 +1,8 @@
 import argparse
-import os
 import pandas as pd
 import json
 import numpy as np
 import data_faker
-import sys
 
 # python3 data_processor.py serialize --imu imu.csv [imu2.csv] --baro baro.csv
 
@@ -46,6 +44,8 @@ def merge_dataframes(file_names, sensor_type):
     return df, number_of_sensors
 
 def main():
+    np.random.seed(0)
+
     args = parse_args()
 
     check_input_files(args)
@@ -62,14 +62,28 @@ def main():
         noise_config = json.load(f)
 
     while number_of_imus < sensor_config['NUM_IMU']:
-        data_faker.fake_imu(imu_data, noise_config)
-        assert len(np.unique(data_csv['id'][:100])) == number_of_imus + 1
+        imu_data = data_faker.fake_imu(imu_data, number_of_imus, noise_config)
+        assert len(np.unique(imu_data['id'][:100])) == number_of_imus + 1
         number_of_imus += 1
 
-    while number_of_baros < sensor_config['NUM_IMU']:
+    while number_of_imus > sensor_config['NUM_IMU']:
+        imu_data = imu_data.iloc[imu_data['id'] != f'IMU{number_of_imus}']
+        number_of_imus -= 1
+
+    while number_of_baros < sensor_config['NUM_BARO']:
         data_faker.fake_baro(baro_data, noise_config)
-        assert len(np.unique(imu_csv['id'][:100])) == number_of_baros + 1
-        number_of_imus += 1
+        assert len(np.unique(baro_data['id'][:100])) == number_of_baros + 1
+        number_of_baros += 1
+
+    while number_of_baros > sensor_config['NUM_BARO']:
+        baro_data = baro_data.iloc[baro_data['id'] != f'BARO{number_of_baros}']
+        number_of_baros -= 1
+
+    print("New IMU data")
+    print(imu_data.head(20))
+
+    print("New BARO data")
+    print(baro_data.head(20))
 
 if __name__ == '__main__':
     main()
