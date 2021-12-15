@@ -1,12 +1,14 @@
+def acc_to_si(data: float):
+    return data * (9.81 * 1024)
 
-def imu_to_si(input :float):
-    return input * (9.81 * 1024)
 
-def magnometer_to_si(input : float):
-    return input
+def mag_to_si(data: float):
+    return data
 
-def baro_to_si(input :float):
-    return input
 
-def gyro_to_si(input :float):
-    return input * (1.0 / 16.4)
+def baro_to_si(data: float):
+    return data
+
+
+def gyro_to_si(data: float):
+    return data * (1.0 / 16.4)
