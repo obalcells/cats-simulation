@@ -1,3 +1,5 @@
 ./flight_sim/imu.csv
 ./flight_sim/baro.csv
+*/.idea/
+*/__pycache__/
 
