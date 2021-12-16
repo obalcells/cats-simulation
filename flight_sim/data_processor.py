@@ -87,6 +87,7 @@ def main():
     imu_data.to_csv("converted_imu.csv")
     print(imu_data.head(20))
 
+    print("New BARO data")
     for column in baro_data[['T', 'P']]:
         baro_data[column] = baro_data[column].apply(lambda x: data_converter.baro_to_si(x))
     baro_data.to_csv("converted_baro.csv")
