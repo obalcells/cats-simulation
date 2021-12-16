@@ -2,6 +2,8 @@ import argparse
 import pandas as pd
 import json
 import numpy as np
+
+import data_converter
 import data_faker
 
 # python3 data_processor.py serialize --imu imu.csv [imu2.csv] --baro baro.csv
@@ -80,9 +82,14 @@ def main():
         number_of_baros -= 1
 
     print("New IMU data")
+    for column in imu_data[['Gx', 'Gy', 'Gz', 'Ax', 'Ay', 'Az']]:
+        imu_data[column] = imu_data[column].apply(lambda x: data_converter.acc_to_si(x))
+    imu_data.to_csv("converted_imu.csv")
     print(imu_data.head(20))
 
-    print("New BARO data")
+    for column in baro_data[['T', 'P']]:
+        baro_data[column] = baro_data[column].apply(lambda x: data_converter.baro_to_si(x))
+    baro_data.to_csv("converted_baro.csv")
     print(baro_data.head(20))
 
 if __name__ == '__main__':
