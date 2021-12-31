@@ -4,7 +4,8 @@ import json
 import numpy as np
 import data_faker
 
-# python3 data_processor.py serialize --imu imu.csv [imu2.csv] --baro baro.csv
+# python3 data_processor.py serialize --imu { imu csv file } [imu csv file] --baro { baro csv file } [baro csv file] --acc [acc csv file]
+# like this: 'python3 data_processor.py serialize --imu imu.csv small_imu_data.csv --baro baro.csv'
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -24,7 +25,6 @@ def check_input_files(args):
     # sensors start with 0 (so there can't be BARO1 if there's no BARO0)
     # correct columns (imu_csv's must include the correct columns)
     # all sensors of a certain type appear in the first 100 timesteps
-    # once I improve the program I'll keep dropping file input requirements
     pass
 
 # merges different csv files from the same sensor type ("IMU", "BARO")
@@ -46,15 +46,17 @@ def merge_dataframes(file_names, sensor_type):
 def main():
     np.random.seed(0)
 
+    # Step 1: What are the files where the data is located?
     args = parse_args()
 
-    check_input_files(args)
-
+    # Step 2: Read the data
     imu_data, number_of_imus = merge_dataframes(args.imu, "IMU")
     baro_data, number_of_baros = merge_dataframes(args.baro, "BARO")
 
-    # imu_data.sort_values(by=['ts'], inplace=True)
+    # Step 3: Check that data is well formatted
+    check_input_files(args)
     
+    # Step 4: Add or delete sensors to adjust for sensor-config.json requirements
     with open('sensor_config.json') as f:
         sensor_config = json.load(f)
 
@@ -79,11 +81,15 @@ def main():
         baro_data = baro_data.iloc[baro_data['id'] != f'BARO{number_of_baros}']
         number_of_baros -= 1
 
-    print("New IMU data")
-    print(imu_data.head(20))
+    # Step 6: Unit conversion 
+    
 
-    print("New BARO data")
-    print(baro_data.head(20))
+    # Step 5: Merge all the data in a single .csv file and sort it based on timestamps
+    data = pd.merge(imu_data, baro_data, how="outer")
+    data.sort_values(["ts"], ascending=True)
+
+    # Step 6: Send the data
+    print(data.head(20))
 
 if __name__ == '__main__':
     main()
