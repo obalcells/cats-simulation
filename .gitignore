@@ -1,5 +1,14 @@
+<<<<<<< HEAD
 flight_sim/imu.csv
 flight_sim/baro.csv
 *.DS_STORE
 *.swp
+=======
+./flight_sim/imu.csv
+./flight_sim/baro.csv
+*/.idea/
+*/__pycache__/
+*/converted_baro.csv
+*/converted_imu.csv
+>>>>>>> 0862b1137282810438d17f6d3879b935b9f69eb1
 

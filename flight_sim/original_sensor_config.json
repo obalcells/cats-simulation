@@ -1,6 +1,0 @@
-{
-    "NUM_IMU": 2,
-    "NUM_MAGNETO": 1,
-    "NUM_ACCELEROMETER": 1,
-    "NUM_BARO": 3
-}

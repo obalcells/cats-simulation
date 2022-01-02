@@ -2,5 +2,5 @@
     "NUM_IMU": 3,
     "NUM_MAGNETO": 1,
     "NUM_ACCELEROMETER": 1,
-    "NUM_BARO": 3
+    "NUM_BARO": 4 
 }
